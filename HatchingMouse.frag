@@ -30,18 +30,31 @@ float mouseEffect(vec2 uv, vec2 mouse, float size)
 void main() {
     vec2 uv = gl_FragCoord.xy/u_resolution.xy;
 
-    vec2 brickSize=vec2(28.0+abs(cos(u_time*0.08))*15.0,28.0+abs(cos(u_time*0.08))*15.0);
- 	vec2 uvs=uv*brickSize;//[0~6]
+    vec2 brickSize=vec2(36.0+abs(cos(u_time*0.08))*25.0,36.0+abs(cos(u_time*0.08))*25.0);
+ 	 vec2 uvs=uv*brickSize;//[0~6]
     vec2 ipos = floor(uvs);  // get the integer coords
     vec2 fpos = fract(uvs);  // get the fractional coords
     vec2 nuv=ipos*0.8/brickSize;
 
     vec4 shadeColor= texture2D(u_tex0, uv); 
-    float shading = texture2D(u_tex0,nuv).g; 
+    float shading = texture2D(u_tex0,nuv).r; 
 
 
    vec2 mouse=u_mouse.xy/u_resolution.xy;
    float value=mouseEffect(nuv,mouse,0.05);
+
+    // Ripple parameters
+    float frequency = 3.0; // Adjust the frequency of ripples
+    float amplitude = 0.03; // Adjust the amplitude of ripples
+
+    // Calculate ripple effect
+    float ripple = sin(uv.x * frequency + u_time) * amplitude;
+
+    // Apply the ripple to the texture coordinates
+    vec2 distortedUV = uv + vec2(ripple, ripple);
+
+    // Sample the color from the input texture
+    //vec4 color = texture2D(u_texture, distortedUV);
    
   
 
